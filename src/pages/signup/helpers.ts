@@ -40,15 +40,9 @@ export async function submitForm(form: SignUpForm): Promise<void> {
     bio: form.bio,
     realName: form.realName,
   };
-
-  const parsedUser = JSON.stringify(user);
-
-  console.log(parsedUser);
-
   try {
-    const response = await api.post('/users', parsedUser);
-    console.log(response);
+    const response = await api.post('/users', user);
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 }

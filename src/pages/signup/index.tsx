@@ -40,6 +40,7 @@ export default function SingUp() {
       await signIn(username, password);
     } catch (error: unknown) {
       const response = error as Response;
+      console.log(response);
       if (response.status === 400) setError('Dados inválidos');
       else setError('Erro desconhecido');
     }
@@ -100,6 +101,10 @@ export default function SingUp() {
             minLength={8}
             required
           />
+          <p className="text-xs text-gray-500 dark:text-gray-400">
+            A senha deve conter apenas letras e números. No mínimo 8 caracteres, sendo pelo menos 1 letra e 1 número.'
+          </p>
+
           <Input
             label="Confirme sua senha*"
             type="password"
