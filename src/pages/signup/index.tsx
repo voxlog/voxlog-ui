@@ -156,7 +156,7 @@ export default function SingUp() {
           </div>
         </form>
 
-        <p className="mb-5 text-base text-center ">
+        <p className="mt-2 mb-5 text-base text-center text-white">
           Já possui uma conta?{' '}
           <Link className="text-purple-500 hover:text-purple-700 dark:hover:text-purple-400" href="/signin">
             Entrar agora

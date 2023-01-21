@@ -9,7 +9,6 @@ export default function GetApiToken() {
 
   async function getApiToken() {
     try {
-      console.log('token no getApiToken:', token);
       api.defaults.headers['Authorization'] = `Bearer ${token}`;
       const { data } = await api.get('/users/auth/token');
       setApiToken(data.token);
