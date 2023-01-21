@@ -1,7 +1,23 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import api from '../../lib/axios';
 
-export default async function GetApiToken({token}: {token: string}) {
+export default async function GetApiToken() {
+  const [apiToken, setApiToken] = React.useState<string | null>(null);
+
+  async function getApiToken() {
+    const { data } = await api.get('/users/auth/token');
+    console.log(data);
+    // setApiToken(data.token);
+  }
+
+  useEffect(() => {
+    getApiToken();
+  }, []);
+
+  if (apiToken === null) {
+    return <div className="flex items-center justify-center w-full h-full">Loading...</div>;
+  }
+      
   return (
     <div className="flex items-center justify-center w-full h-full">
       {/* centralize a header with "Api Token" */}
@@ -12,24 +28,11 @@ export default async function GetApiToken({token}: {token: string}) {
             <input
             className="w-1/2 border-2 border-gray-300 rounded-md h-1/2"
             type="text"
-            value={token !== '' ? token : 'You need to login to get your token'}
+            value={apiToken !== '' ? apiToken : 'You need to login to get your token'}
             readOnly
           />        
         </div>
       </div>
     </div>
   );
-}
-
-export async function getServerSideProps(context: any) {
-  const { data } = await api.get('/users/auth/token', {
-    headers: {
-      Authorization: `Bearer ${context.req.cookies.token}`,
-    },
-  });
-  return {
-    props: {
-      token: data.token || '',
-    },
-  };
 }
