@@ -20,7 +20,6 @@ export default function UserProfile({ user }: { user: UserDTO }) {
             </div>
             <section className="container w-full mx-auto text-center md:w-6/12 md:text-left">
               <div className="items-center px-6 sm:flex md:flex-col justify-evenly">
-                <ListeningReportMenu />
                 <RecentEventsMenu />
               </div>
             </section>

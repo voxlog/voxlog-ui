@@ -113,7 +113,7 @@ const RecentTracks = ({ username }: { username: string }) => {
 
   useEffect(() => {
     const fetchItems = async () => {
-      const url = `/users/${username}/recent-tracks`;
+      const url = `/users/${username}/recent-scrobbles`;
       const response = await api.get(url);
       const scrobbles = response.data as UserRecentTracksDTO[];
       setScrobbles(scrobbles);

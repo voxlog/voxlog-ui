@@ -10,7 +10,7 @@ import { DateTime } from 'luxon';
 interface AuthContextProps {
   user: UserDTO | null;
   signIn: (username: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
+  singOut: () => Promise<void>;
   loading: boolean;
 }
 
@@ -27,9 +27,9 @@ export const AuthContextProvider = ({ children }: React.PropsWithChildren<{}>) =
     if (lastLogin) {
       const userLastLogin: DateTime = DateTime.fromISO(lastLogin);
       const diffInDays = userLastLogin.diffNow('days').days;
-      if (diffInDays > 30) logout();
+      if (diffInDays > 30) singOut();
     } else {
-      logout();
+      singOut();
     }
 
     const { 'jwt.token': token } = parseCookies();
@@ -83,7 +83,7 @@ export const AuthContextProvider = ({ children }: React.PropsWithChildren<{}>) =
     }
   };
 
-  const logout = async () => {
+  const singOut = async () => {
     destroyCookie(undefined, 'jwt.token');
     destroyCookie(undefined, 'jwt.lastLogin');
     localStorage.removeItem('user');
@@ -96,7 +96,7 @@ export const AuthContextProvider = ({ children }: React.PropsWithChildren<{}>) =
       value={{
         user,
         signIn,
-        logout,
+        singOut,
         loading,
       }}>
       {children}

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useAuth } from '../../hooks/auth';
 import UserImage from '../userImage';
 import Image from 'next/image';
+import SingUp from '../../pages/signup/index';
 
 const navbarLinks: LinkProps[] = [
   {
@@ -103,10 +104,10 @@ const NavLinksDesktop = () => {
         {user ? (
           <Link href={`/users/${user.username}`}>
             <div className="flex items-center space-x-2">
-              <UserImage url={user.profilePictureUrl} sizeInPixels={40} name={user.username} className="rounded-full" />
               <span className="text-lg font-medium text-black dark:text-white hover:underline underline-offset-2 decoration-1 ">
                 {user.username}
               </span>
+              <SignOutButton />
             </div>
           </Link>
         ) : (
@@ -122,7 +123,7 @@ const NavLinksDesktop = () => {
 };
 
 const NavLinksMobile = ({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (bool: boolean) => void }) => {
-  const { user } = useAuth();
+  const { user, singOut } = useAuth();
   return (
     <div className="px-2 pt-2 pb-3 space-y-1">
       <Link href="/" onClick={() => setIsOpen(!isOpen)}>
@@ -140,10 +141,10 @@ const NavLinksMobile = ({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (bo
       {user ? (
         <Link href={`/users/${user.username}`} onClick={() => setIsOpen(!isOpen)}>
           <div className="flex items-center justify-center mt-1 space-x-1">
-            <span className="flex items-center justify-between w-full pl-3 text-base font-medium bg-neutral-50 dark:text-white dark:bg-neutral-800 rounded-3xl focus:outline-none focus:text-white focus:bg-purple-500 hover:bg-purple-500 hover:text-white">
+            <span className="flex items-center justify-between w-full py-2 pl-3 text-base font-medium bg-neutral-50 dark:text-white dark:bg-neutral-800 rounded-3xl focus:outline-none focus:text-white focus:bg-purple-500 hover:bg-purple-500 hover:text-white">
               {user.username}
-              <UserImage url={user.profilePictureUrl} sizeInPixels={40} name={user.username} className="rounded-full" />
             </span>
+            <SignOutButton />
           </div>
         </Link>
       ) : (
@@ -154,6 +155,26 @@ const NavLinksMobile = ({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (bo
         </Link>
       )}
     </div>
+  );
+};
+
+const SignOutButton = () => {
+  const { singOut } = useAuth();
+  return (
+    <button className="flex items-center mt-3 duration-200 hover:scale-110" onClick={() => singOut()}>
+      <svg fill="#000000" height="800" viewBox="0 0 800 800" width="800" xmlns="http://www.w3.org/2000/svg" className="w-7 h-7">
+      <g>
+        <g id="sign-out">
+          <path d="M180.455,360.91H24.061V24.061h156.394c6.641,0,12.03-5.39,12.03-12.03s-5.39-12.03-12.03-12.03H12.03
+            C5.39,0.001,0,5.39,0,12.031V372.94c0,6.641,5.39,12.03,12.03,12.03h168.424c6.641,0,12.03-5.39,12.03-12.03
+            C192.485,366.299,187.095,360.91,180.455,360.91z"/>
+          <path d="M381.481,184.088l-83.009-84.2c-4.704-4.752-12.319-4.74-17.011,0c-4.704,4.74-4.704,12.439,0,17.179l62.558,63.46H96.279
+            c-6.641,0-12.03,5.438-12.03,12.151c0,6.713,5.39,12.151,12.03,12.151h247.74l-62.558,63.46c-4.704,4.752-4.704,12.439,0,17.179
+            c4.704,4.752,12.319,4.752,17.011,0l82.997-84.2C386.113,196.588,386.161,188.756,381.481,184.088z"/>
+        </g>
+      </g>
+      </svg>
+    </button>
   );
 };
 
@@ -171,19 +192,16 @@ const Item = ({ name, href }: ItemProps) => {
 };
 
 const Account = () => {
-  const { user, logout } = useAuth();
+  const { user, singOut } = useAuth();
   return (
     <div className="flex">
       <Link href={user?.username ? `/users/${user?.username}` : '/signin'}>
         <div className="flex items-center justify-center mt-2 md:mt-0">
-          {user?.profilePictureUrl && (
-            <UserImage url={user?.profilePictureUrl} name={user?.username} sizeInPixels={32} />
-          )}
           <h1 className="ml-2 font-bold text-md">{user?.realName?.split(' ')[0] || user?.username || 'sign in'}</h1>
         </div>
       </Link>
-      <button className="ml-2 text-sm font-bold text-white font-nerd" onClick={() => logout()}>
-        {user?.username ? ' logout' : ''}
+      <button className="ml-2 text-sm font-bold text-white font-nerd" onClick={() => singOut()}>
+        {user?.username ? ' singOut' : ''}
       </button>
     </div>
   );
