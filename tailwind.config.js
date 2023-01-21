@@ -1,7 +1,8 @@
 // Configure tailwind.css in the project root to override these defaults
 module.exports = {
   content: ['./src/pages/**/*.{js,jsx,ts,tsx}', './src/components/**/*.{js,jsx,ts,tsx}'],
-  // darkMode: "media", // media or class
+  darkMode: 'class', // media or class
+  // darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
       fontFamily: {

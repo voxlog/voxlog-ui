@@ -11,26 +11,28 @@ export type UserDTO = {
   userId: string;
   username: string;
   email: string;
-  birthdate: string;
+  birthDate: string;
   bio?: string;
   realName?: string;
   profilePictureUrl?: string;
-  defaultTopArtistsRange: string;
-  defaultTopAlbumsRange: string;
-  defaultTopTracksRange: string;
-  createdAt: Date;
-  updatedAt: Date;
+  artistsRange: string;
+  albumsRange: string;
+  tracksRange: string;
+  createdAt: string;
+  updatedAt: string;
 };
 
-export type UserRecentTracksDTO = {
-  scrobbleCreatedAt: Date;
+export type RecentScrobble = {
+  scrobble: {
+    createdAt: string;
+  };
   track: {
     trackId: string;
-    trackTitle: string;
-    coverArtUrl: string;
+    title: string;
   };
   album: {
-    coverArtUrl: string;
+    coverArtUrl: string | null;
+    albumId: string;
   };
   artist: {
     artistId: string;

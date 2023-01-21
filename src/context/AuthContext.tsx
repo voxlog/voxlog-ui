@@ -9,8 +9,9 @@ import { DateTime } from 'luxon';
 
 interface AuthContextProps {
   user: UserDTO | null;
+  token: string;
   signIn: (username: string, password: string) => Promise<void>;
-  singOut: () => Promise<void>;
+  singOut: () => void;
   loading: boolean;
 }
 
@@ -32,13 +33,12 @@ export const AuthContextProvider = ({ children }: React.PropsWithChildren<{}>) =
       singOut();
     }
 
-    const { 'jwt.token': token } = parseCookies();
+    const { 'jwt.token': tokenStored } = parseCookies();
     const userData = localStorage.getItem('user');
 
-    if (token) setToken(token);
-
+    if (tokenStored) setToken(tokenStored);
+    api.defaults.headers['Authorization'] = `Bearer ${tokenStored}`;
     if (userData) setUser(JSON.parse(userData) as UserDTO);
-
     setLoading(false);
   }, []);
 
@@ -46,11 +46,11 @@ export const AuthContextProvider = ({ children }: React.PropsWithChildren<{}>) =
     try {
       const body = { username, password };
       const { data } = await api.post('/users/auth', body);
-      const { token } = data;
+      const { token: tokenUser } = data;
 
-      setCookie(undefined, 'jwt.token', token, { maxAge: 60 * 60 * 24 * 30 });
-      setToken(token);
-      getUser(token);
+      setCookie(undefined, 'jwt.token', tokenUser, { maxAge: 60 * 60 * 24 * 30 });
+      setToken(tokenUser);
+      getUser(tokenUser);
     } catch (error) {
       setError(error);
     } finally {
@@ -83,7 +83,7 @@ export const AuthContextProvider = ({ children }: React.PropsWithChildren<{}>) =
     }
   };
 
-  const singOut = async () => {
+  const singOut = () => {
     destroyCookie(undefined, 'jwt.token');
     destroyCookie(undefined, 'jwt.lastLogin');
     localStorage.removeItem('user');
@@ -98,6 +98,7 @@ export const AuthContextProvider = ({ children }: React.PropsWithChildren<{}>) =
         signIn,
         singOut,
         loading,
+        token,
       }}>
       {children}
     </AuthContext.Provider>
