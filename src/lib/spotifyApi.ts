@@ -10,6 +10,21 @@ async function getAccessToken() {
     spotifyApi.setAccessToken(data.body["access_token"]);
 };
 
+export async function getSpotifyArtist(artistId: string): Promise<SpotifyApi.SingleArtistResponse> {
+    try {
+      const data = await spotifyApi.getArtist(artistId);
+      return data.body;
+    } catch (error: unknown) {
+      
+      const statusCode = (error as any).statusCode;
+      if (statusCode === 401) {
+        await getAccessToken();
+        return getSpotifyArtist(artistId);
+      }
+      throw error;
+    }
+}
+
 export async function getSpotifyArtistTopTracks(artistId: string): Promise<SpotifyApi.ArtistsTopTracksResponse> {
     try {
       const data = await spotifyApi.getArtistTopTracks(artistId, 'BR');
@@ -55,4 +70,7 @@ export async function getSpotifyAlbumTracks(albumId: string): Promise<SpotifyApi
     }
 }
 
-export default { getSpotifyArtistTopTracks, getSpotifyArtistRecentAlbums, getSpotifyAlbumTracks };
+export default { 
+  getSpotifyArtistTopTracks, getSpotifyArtistRecentAlbums, 
+  getSpotifyAlbumTracks, getSpotifyArtist 
+};

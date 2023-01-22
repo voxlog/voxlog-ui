@@ -1,16 +1,17 @@
 import React from 'react';
 import api from '../../lib/axios';
-import { getSpotifyArtistTopTracks,getSpotifyArtistRecentAlbums } from '../../lib/spotifyApi';
+import { getSpotifyArtistTopTracks,getSpotifyArtistRecentAlbums, getSpotifyArtist } from '../../lib/spotifyApi';
 import { NextPageContext } from 'next';
 import { Artist } from '../../utils/dtos/Resources';
 
 export default function ArtistPage(
-  {artist, listeningStats,spotifyTopTracks, spotifyRecentAlbums} : 
+  {artist, listeningStats,spotifyTopTracks, spotifyRecentAlbums, genres} : 
   {
     artist: Artist, 
     listeningStats: any,
     spotifyTopTracks: SpotifyApi.ArtistsTopTracksResponse | null,
-    spotifyRecentAlbums: SpotifyApi.ArtistsAlbumsResponse | null
+    spotifyRecentAlbums: SpotifyApi.ArtistsAlbumsResponse | null,
+    genres: string[] | null
   }
   ) {
   return (
@@ -36,6 +37,20 @@ export default function ArtistPage(
               <h1 className="text-lg">Total hours listened</h1>
             </div>
           </div>
+          {
+            genres ? (
+              <div className='text-lg mt-4 text-gray-500'>
+                <span className='font-bold'>genres: </span>
+                {
+                  genres.map((genre: string, index: number) => {
+                    return (
+                      <span key={index}>{genre}{index < genres.length - 1 ? ', ' : ''}</span>
+                    )
+                  }
+                )}
+              </div>
+            ) : ''
+          }
           {/* voxlog top tracks and Spotify's top tracks */}
           <div className="flex flex-row justify-between mt-10 text-left">
             <div className="flex flex-col items-center">
@@ -147,9 +162,11 @@ export async function getServerSideProps(context: NextPageContext) {
 
     let spotifyTopTracks: SpotifyApi.ArtistsTopTracksResponse | null = null;
     let spotifyRecentAlbums: SpotifyApi.ArtistsAlbumsResponse | null = null;
+    let spotifyArtist: SpotifyApi.SingleArtistResponse | null = null;
     if(artistData.spId) {
       spotifyTopTracks = await getSpotifyArtistTopTracks(artistData.spId);
       spotifyRecentAlbums = await getSpotifyArtistRecentAlbums(artistData.spId);
+      spotifyArtist = await getSpotifyArtist(artistData.spId);
     }
 
     return {
@@ -158,6 +175,7 @@ export async function getServerSideProps(context: NextPageContext) {
         listeningStats: listeningStats,
         spotifyTopTracks: spotifyTopTracks ? spotifyTopTracks : null,
         spotifyRecentAlbums: spotifyRecentAlbums ? spotifyRecentAlbums : null,
+        genres: spotifyArtist ? spotifyArtist.genres : null,
       },
     };
   } catch (error) {
