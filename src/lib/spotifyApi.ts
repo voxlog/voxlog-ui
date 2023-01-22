@@ -40,4 +40,19 @@ export async function getSpotifyArtistRecentAlbums(artistId: string): Promise<Sp
     }
 }
 
-export default { getSpotifyArtistTopTracks, getSpotifyArtistRecentAlbums };
+export async function getSpotifyAlbumTracks(albumId: string): Promise<SpotifyApi.AlbumTracksResponse> {
+    try {
+      const data = await spotifyApi.getAlbumTracks(albumId);
+      return data.body;
+    } catch (error: unknown) {
+      
+      const statusCode = (error as any).statusCode;
+      if (statusCode === 401) {
+        await getAccessToken();
+        return getSpotifyAlbumTracks(albumId);
+      }
+      throw error;
+    }
+}
+
+export default { getSpotifyArtistTopTracks, getSpotifyArtistRecentAlbums, getSpotifyAlbumTracks };

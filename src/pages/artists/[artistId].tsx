@@ -139,8 +139,11 @@ export async function getServerSideProps(context: NextPageContext) {
   try {
     const { artistId } = context.query;
     const { data: voxArtistData }: { data: any } = await api.get(`/artists/${artistId}`);
-    const { data: listeningStats } = await api.get(`/artists/${artistId}/listening-stats`);
     const { artist: artistData } : {artist: Artist} = voxArtistData;
+
+    if (!artistData) throw new Error('Artist not found');
+
+    const { data: listeningStats } = await api.get(`/artists/${artistId}/listening-stats`);
 
     let spotifyTopTracks: SpotifyApi.ArtistsTopTracksResponse | null = null;
     let spotifyRecentAlbums: SpotifyApi.ArtistsAlbumsResponse | null = null;
@@ -149,7 +152,6 @@ export async function getServerSideProps(context: NextPageContext) {
       spotifyRecentAlbums = await getSpotifyArtistRecentAlbums(artistData.spId);
     }
 
-    if (!artistData) throw new Error('Artist not found');
     return {
       props: {
         artist: artistData,
