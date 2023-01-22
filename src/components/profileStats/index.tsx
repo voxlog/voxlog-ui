@@ -339,7 +339,7 @@ function ScrobbleInstance({ scrobble }: { scrobble: RecentScrobble }) {
             <span className="font-semibold text-md hover-link">{scrobble.track.title}</span>
           </Link>
           <Link href={`/artists/${scrobble.artist.artistId}`}>
-            <span className="text-sm font-thin hover-link">{scrobble.artist.name}</span>
+            <span className="text-sm font-extralight hover-link">{scrobble.artist.name}</span>
           </Link>
         </div>
         <span className="hidden text-sm font-semibold md:block">{formatDate(scrobble.scrobble.createdAt)}</span>
