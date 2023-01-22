@@ -5,12 +5,14 @@ import { Artist } from '../../utils/dtos/Resources';
 import Image from 'next/image';
 import UserImage from '../../components/userImage/index';
 
-export default function ArtistPage({ artist }: { artist: Artist }) {
+export default function ArtistPage({artist} : {artist: Artist}) {
+  console.log(artist)
+
   return (
     <div className="w-full h-screen">
       <div className="items-center w-full mx-auto mt-8">
         <div className="">
-          <UserImage url={artist.artUrl} name={artist.name} sizeInPixels={200} className="mx-auto bg-red-100" />
+          <UserImage url={artist.picUrl} name={artist.name} sizeInPixels={200} className="mx-auto bg-red-100" />
           <div>
             <h1 className="mt-4 text-5xl font-extrabold text-center">{artist.name}</h1>
           </div>
@@ -23,7 +25,9 @@ export default function ArtistPage({ artist }: { artist: Artist }) {
 export async function getServerSideProps(context: NextPageContext) {
   try {
     const { artistId } = context.query;
-    const { data: artist }: { data: Artist } = await api.get(`/artists/${artistId}`);
+    const { data: artistData }: { data: any } = await api.get(`/artists/${artistId}`);
+
+    const { artist } = artistData;
 
     if (!artist) throw new Error('Artist not found');
     return {

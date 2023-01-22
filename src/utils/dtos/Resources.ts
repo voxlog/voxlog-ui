@@ -1,7 +1,10 @@
 export type Artist = {
-  artistId: string;
-  name: string;
-  artUrl: string | null;
+  artistId: string,
+  createdAt: string
+  mbId: string
+  name: string
+  picUrl: string
+  spId: string
 };
 
 export type Album = {
