@@ -1,5 +1,6 @@
 import React from 'react';
 import api from '../../lib/axios';
+import { getSpotifyArtistTopTracks } from '../../lib/spotifyApi';
 import { NextPageContext } from 'next';
 import { Artist } from '../../utils/dtos/Resources';
 import Image from 'next/image';
@@ -11,8 +12,8 @@ export default function ArtistPage({artist} : {artist: Artist}) {
   return (
     <div className="w-full h-screen">
       <div className="items-center w-full mx-auto mt-8">
-        <div className="">
-          <UserImage url={artist.picUrl} name={artist.name} sizeInPixels={200} className="mx-auto bg-red-100" />
+        <div className="text-center">
+          <img src={artist.picUrl} alt={artist.name} className='h-[200px] rounded-lg' style={{'display':'inline-block'}} />
           <div>
             <h1 className="mt-4 text-5xl font-extrabold text-center">{artist.name}</h1>
           </div>
@@ -25,14 +26,22 @@ export default function ArtistPage({artist} : {artist: Artist}) {
 export async function getServerSideProps(context: NextPageContext) {
   try {
     const { artistId } = context.query;
-    const { data: artistData }: { data: any } = await api.get(`/artists/${artistId}`);
+    const { data: voxArtistData }: { data: any } = await api.get(`/artists/${artistId}`);
+    const { artist: artistData } : {artist: Artist} = voxArtistData;
 
-    const { artist } = artistData;
+    if(artistData.spId) {
+      //const spotifyTopTracks = await getSpotifyArtistTopTracks(artistData.spId);
+      //console.log('spotify shit', spotifyTopTracks)
+    }
 
-    if (!artist) throw new Error('Artist not found');
+    // Getting listening stats
+    const { data: listeningStats } = await api.get(`/artists/${artistId}/listening-stats`);
+    console.log('listening stats', listeningStats)
+
+    if (!artistData) throw new Error('Artist not found');
     return {
       props: {
-        artist,
+        artist: artistData,
       },
     };
   } catch (error) {

@@ -1,5 +1,6 @@
 import React from 'react';
 import '../styles/globals.css';
+import '../styles/artistPage.css';
 import { AuthContextProvider } from '../context/AuthContext';
 import Navbar from '../components/navbar';
 import localFont from '@next/font/local';
