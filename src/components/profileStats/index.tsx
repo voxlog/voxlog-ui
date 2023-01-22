@@ -39,40 +39,44 @@ function TopArtists({ username, range }: { username: string; range: string }) {
     }
   }
   useEffect(() => {
-    // getTopArtists();
-    setArtists([
-      {
-        artistId: '1',
-        artistName: 'Metallica',
-        artistArtUrl: 'https://i.scdn.co/image/ab6761610000e5eb8101d13bdd630b0889acd2fd',
-      },
-      {
-        artistId: '2',
-        artistName: 'Hayley Williams',
-        artistArtUrl: 'https://i.scdn.co/image/ab6761610000e5ebca3aa12c1b46ff911ad53104',
-      },
-      {
-        artistId: '3',
-        artistName: 'Milton Nascimento',
-        artistArtUrl: 'https://i.scdn.co/image/ab67706c0000da84bfff8bb61ae0e83a2878df1e',
-      },
-      {
-        artistId: '4',
-        artistName: 'Novos Baianos',
-        artistArtUrl: 'https://i.scdn.co/image/ab6761610000e5eb6f2aa6bffd27b505bc2e5b8c',
-      },
-    ]);
+    getTopArtists();
+    // setArtists([
+    //   {
+    //     artistId: '1',
+    //     artistName: 'Metallica',
+    //     artistArtUrl: 'https://i.scdn.co/image/ab6761610000e5eb8101d13bdd630b0889acd2fd',
+    //   },
+    //   {
+    //     artistId: '2',
+    //     artistName: 'Hayley Williams',
+    //     artistArtUrl: 'https://i.scdn.co/image/ab6761610000e5ebca3aa12c1b46ff911ad53104',
+    //   },
+    //   {
+    //     artistId: '3',
+    //     artistName: 'Milton Nascimento',
+    //     artistArtUrl: 'https://i.scdn.co/image/ab67706c0000da84bfff8bb61ae0e83a2878df1e',
+    //   },
+    //   {
+    //     artistId: '4',
+    //     artistName: 'Novos Baianos',
+    //     artistArtUrl: 'https://i.scdn.co/image/ab6761610000e5eb6f2aa6bffd27b505bc2e5b8c',
+    //   },
+    // ]);
   }, [filterRange]);
 
   return <ArtistList title="Top Artists" items={artists} filterRange={filterRange} setFilterRange={setFilterRange} />;
 }
 
-const TopAlbums = ({ username, range }: { username: string; range: string }) => {
+function TopAlbums({ username, range }: { username: string; range: string }) {
   const [albums, setAlbums] = useState<TopAlbums[]>([]);
   const [filterRange, setFilterRange] = useState<string>(range);
   async function getTopAlbums() {
     try {
-      const { data } = await api.get(`/users/${username}/top-albums`);
+      const { data } = await api.get(`/users/${username}/top-albums`, {
+        params: {
+          range: filterRange,
+        },
+      });
       const { topAlbums } = data;
       setAlbums(topAlbums);
     } catch (error) {
@@ -80,33 +84,35 @@ const TopAlbums = ({ username, range }: { username: string; range: string }) => 
     }
   }
   useEffect(() => {
-    // getTopAlbums();
-    setAlbums([
-      {
-        albumId: '1',
-        albumTitle: 'Master of Puppets',
-        albumArtUrl: 'https://i.scdn.co/image/ab67616d0000b273668e3aca3167e6e569a9aa20',
-      },
-      {
-        albumId: '2',
-        albumTitle: 'Petals for Armor',
-        albumArtUrl: 'https://i.scdn.co/image/ab67616d0000b273896e2483613a566bcb00d324',
-      },
-      {
-        albumId: '3',
-        albumTitle: 'Clube da Esquina',
-        albumArtUrl: 'https://i.scdn.co/image/ab67616d0000b273bfbfbf3201ecd4d56ac3c155',
-      },
-      {
-        albumId: '4',
-        albumTitle: 'Acabou Chorare',
-        albumArtUrl: 'https://i.scdn.co/image/ab67616d0000b27327968fcceb7e9541fb2c9d76',
-      },
-    ]);
-  }, []);
+    console.log('range', filterRange);
+    getTopAlbums();
+    // setAlbums([
+    //   {
+    //     albumId: '1',
+    //     albumTitle: 'Master of Puppets',
+    //     albumArtUrl: 'https://i.scdn.co/image/ab67616d0000b273668e3aca3167e6e569a9aa20',
+    //   },
+    //   {
+    //     albumId: '2',
+    //     albumTitle: 'Petals for Armor',
+    //     albumArtUrl: 'https://i.scdn.co/image/ab67616d0000b273896e2483613a566bcb00d324',
+    //   },
+    //   {
+    //     albumId: '3',
+    //     albumTitle: 'Clube da Esquina',
+    //     albumArtUrl: 'https://i.scdn.co/image/ab67616d0000b273bfbfbf3201ecd4d56ac3c155',
+    //   },
+    //   {
+    //     albumId: '4',
+    //     albumTitle: 'Acabou Chorare',
+    //     albumArtUrl: 'https://i.scdn.co/image/ab67616d0000b27327968fcceb7e9541fb2c9d76',
+    //   },
+    // ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterRange]);
 
-  return <AlbumsList title="Top Albums" items={albums} />;
-};
+  return <AlbumsList title="Top Albums" items={albums} filterRange={filterRange} setFilterRange={setFilterRange} />;
+}
 
 function ArtistList({
   title,
@@ -119,19 +125,48 @@ function ArtistList({
   filterRange: string;
   setFilterRange: (range: string) => void;
 }) {
-  const rangeOptions = ['7 days', '1 month', '3 months', '6 months', '12 months', 'All time'];
+  const rangeOptions = ['Week', 'Month', 'Quarter', 'HalfYear', 'Year', 'AllTime'];
+  const rangeOptionsMap: { [key: string]: string } = {
+    Week: '7 days',
+    Month: '1 month',
+    Quarter: '3 months',
+    HalfYear: '6 months',
+    Year: '1 year',
+    AllTime: 'All time',
+  };
+
+  useEffect(() => {
+    setFilterRange(filterRange);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterRange]);
+
   const [selectedRange, setSelectedRange] = useState<string>(filterRange);
+  const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const [artists, setArtists] = useState<TopArtists[]>(items);
-  const [range, setRange] = useState<string>(filterRange);
   return (
     <section className="flex flex-col justify-between w-full my-1">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-center md:text-left">{title}</h1>
-        <Link
-          href="#"
-          className="text-xs font-semibold text-neutral-500 hover:text-black dark:text-neutral-400 hover:dark:text-white">
-          <h6 className="text-sm font-thin">All Time ⭣</h6>
-        </Link>
+        <button className="text-lg text-neutral-500 hover:text-black" onClick={() => setDropdownOpen(!dropdownOpen)}>
+          {rangeOptionsMap[selectedRange]} ⭣
+        </button>
+        <h1 className="mr-2 text-3xl font-bold text-center md:text-left">{title}</h1>
+        {dropdownOpen && (
+          // under the button
+          <div className="absolute flex flex-col items-center justify-center w-32 mt-2 bg-white border rounded-md shadow-md -10 i border-neutral-200">
+            {rangeOptions.map((range) => (
+              <button
+                key={range}
+                className="block px-4 py-2 text-sm text-left text-neutral-500 hover:text-black"
+                onClick={() => {
+                  setSelectedRange(range);
+                  setDropdownOpen(false);
+                  setFilterRange(range);
+                }}>
+                {rangeOptionsMap[range]}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
       <div className="flex mx-auto md:mx-0">
         {artists.length > 0 ? (
@@ -146,17 +181,59 @@ function ArtistList({
     </section>
   );
 }
-function AlbumsList(items: { title: string; items: TopAlbums[] }) {
-  const { title, items: albums } = items;
+
+function AlbumsList({
+  title,
+  items,
+  filterRange,
+  setFilterRange,
+}: {
+  title: string;
+  items: TopAlbums[];
+  filterRange: string;
+  setFilterRange: (range: string) => void;
+}) {
+  const rangeOptions = ['Week', 'Month', 'Quarter', 'HalfYear', 'Year', 'AllTime'];
+  const rangeOptionsMap: { [key: string]: string } = {
+    Week: '7 days',
+    Month: '1 month',
+    Quarter: '3 months',
+    HalfYear: '6 months',
+    Year: '1 year',
+    AllTime: 'All time',
+  };
+
+  useEffect(() => {
+    setFilterRange(filterRange);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterRange]);
+
+  const [selectedRange, setSelectedRange] = useState<string>(filterRange);
+  const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
+  const [albums, setAlbums] = useState<TopAlbums[]>(items);
   return (
     <section className="flex flex-col justify-between w-full my-1">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-center md:text-left">{title}</h1>
-        <Link
-          href="#"
-          className="text-xs font-semibold text-neutral-500 hover:text-black dark:text-neutral-400 hover:dark:text-white">
-          <h6 className="text-sm font-thin">All Time ⭣</h6>
-        </Link>
+        <button className="text-lg text-neutral-500 hover:text-black" onClick={() => setDropdownOpen(!dropdownOpen)}>
+          {rangeOptionsMap[selectedRange]} ⭣
+        </button>
+        <h1 className="mr-2 text-3xl font-bold text-center md:text-left">{title}</h1>
+        {dropdownOpen && (
+          <div className="absolute flex flex-col items-center justify-center w-32 mt-2 bg-white border rounded-md shadow-md -10 i border-neutral-200">
+            {rangeOptions.map((range) => (
+              <button
+                key={range}
+                className="block px-4 py-2 text-sm text-left text-neutral-500 hover:text-black"
+                onClick={() => {
+                  setSelectedRange(range);
+                  setDropdownOpen(false);
+                  setFilterRange(range);
+                }}>
+                {rangeOptionsMap[range]}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
       <div className="flex mx-auto md:mx-0">
         {albums.length > 0 ? (
@@ -165,7 +242,7 @@ function AlbumsList(items: { title: string; items: TopAlbums[] }) {
             return <Card key={title} title={albumTitle} image={albumArtUrl} link={`/albums/${albumId}`} />;
           })
         ) : (
-          <h1 className="text-2xl font-bold text-center md:text-left">No albums scrobbled yet</h1>
+          <h1 className="text-xl font-light text-center md:text-left">No album scrobbled yet</h1>
         )}
       </div>
     </section>
@@ -200,7 +277,6 @@ function RecentTracks({ username }: { username: string }) {
     const url = `/users/${username}/recent-scrobbles`;
     const response = await api.get(url);
     const scrobbles = response.data as RecentScrobble[];
-    console.log(scrobbles);
     setScrobbles(scrobbles);
   };
 
@@ -211,7 +287,7 @@ function RecentTracks({ username }: { username: string }) {
 
   return (
     <section className="flex flex-col justify-between w-full">
-      <h1 className="text-3xl font-bold text-center md:text-left">Recent Tracks</h1>
+      <h1 className="mr-2 text-3xl font-bold text-right">Recent Tracks</h1>
       <div className="mx-1">
         {scrobbles.map((scrobble) => {
           counter++;

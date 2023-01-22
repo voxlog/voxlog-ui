@@ -7,7 +7,7 @@ import Link from 'next/link';
 
 export default function SignIn() {
   const router = useRouter();
-  const { user, signIn, loading } = useAuth();
+  const { user, signIn, loading, signInError } = useAuth();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -16,7 +16,7 @@ export default function SignIn() {
   }, [user, router]);
 
   const buttonDisabled = password.length < 3 || username.length < 3 || !validatePassword(password);
-
+  const errorMessage = signInError ? 'Invalid username or password' : '';
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     signIn(username, password);
@@ -54,6 +54,9 @@ export default function SignIn() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
+          {/* message in case of failure */}
+          <p className="text-sm text-red-500">{loading && 'Loading...'}</p>
+          <p className="mb-5 text-sm text-center text-red-500">{errorMessage}</p>
           <div className="flex items-center justify-between">
             <button
               disabled={loading || buttonDisabled}

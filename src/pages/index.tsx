@@ -1,8 +1,10 @@
 import Navbar from '../components/navbar';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useAuth } from '../hooks/auth';
 
 export default function Home() {
+  const { user } = useAuth();
   return (
     <div className="absolute top-0 w-full h-screen overflow-hidden -z-10">
       <Image
@@ -22,7 +24,7 @@ export default function Home() {
       <div className="absolute top-0 left-0 flex flex-col items-center justify-center w-full h-full">
         <h1 className="text-5xl font-bold text-white">Voxlog</h1>
         <p className="text-2xl text-center text-white">Your one stop service for all your musical styles.</p>
-        <Link href="/signin">
+        <Link href={user ? `/users/${user.username}` : '/signin'}>
           <button className="px-4 py-2 mt-4 text-lg font-bold text-white bg-purple-500 rounded-md">Get Started</button>
         </Link>
       </div>

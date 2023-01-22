@@ -1,7 +1,5 @@
 import { createContext, useEffect, useState } from 'react';
 import React from 'react';
-
-// store token in a secure cookie
 import { setCookie, parseCookies, destroyCookie } from 'nookies';
 import api from '../lib/axios';
 import { UserDTO } from '../utils/dtos/User';
@@ -9,9 +7,10 @@ import { DateTime } from 'luxon';
 
 interface AuthContextProps {
   user: UserDTO | null;
+  signInError: unknown | null;
   token: string;
   signIn: (username: string, password: string) => Promise<void>;
-  singOut: () => void;
+  signOut: () => void;
   loading: boolean;
 }
 
@@ -20,17 +19,20 @@ export const AuthContext = createContext({} as AuthContextProps);
 export const AuthContextProvider = ({ children }: React.PropsWithChildren<{}>) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [user, setUser] = useState({} as UserDTO | null);
-  const [error, setError] = useState<unknown | null>(null);
+  const [signInError, setSignInError] = useState<unknown | null>(null);
   const [token, setToken] = useState<string>('');
 
   useEffect(() => {
     const { 'jwt.lastLogin': lastLogin } = parseCookies();
+
     if (lastLogin) {
       const userLastLogin: DateTime = DateTime.fromISO(lastLogin);
       const diffInDays = userLastLogin.diffNow('days').days;
-      if (diffInDays > 30) singOut();
+      if (diffInDays > 30) {
+        signOut();
+      }
     } else {
-      singOut();
+      signOut();
     }
 
     const { 'jwt.token': tokenStored } = parseCookies();
@@ -52,53 +54,52 @@ export const AuthContextProvider = ({ children }: React.PropsWithChildren<{}>) =
       setToken(tokenUser);
       getUser(tokenUser);
     } catch (error) {
-      setError(error);
+      setSignInError(error);
     } finally {
       setLoading(false);
     }
   };
 
-  const getUser = async (token: string) => {
+  async function getUser(token: string) {
     if (token) {
       api.defaults.headers['Authorization'] = `Bearer ${token}`;
       setLoading(true);
-      api
-        .get('/users/current')
-        .then((response) => {
-          const user: UserDTO = response.data as UserDTO;
-          setUser(user);
-          localStorage.setItem('user', JSON.stringify(user));
 
-          setCookie(undefined, 'jwt.lastLogin', JSON.stringify(DateTime.now()), {
-            maxAge: 60 * 60 * 24 * 30,
-          });
-        })
+      try {
+        const { data } = await api.get('/users/current');
+        const user: UserDTO = data as UserDTO;
+        setUser(user);
+        localStorage.setItem('user', JSON.stringify(user));
 
-        .catch((error) => {
-          setError(error);
-        })
-        .finally(() => {
-          setLoading(false);
+        setCookie(undefined, 'jwt.lastLogin', JSON.stringify(DateTime.now()), {
+          maxAge: 60 * 60 * 24 * 30,
         });
+      } catch (error) {
+        setSignInError(error);
+        signOut();
+      } finally {
+        setLoading(false);
+      }
     }
-  };
+  }
 
-  const singOut = () => {
+  function signOut() {
     destroyCookie(undefined, 'jwt.token');
     destroyCookie(undefined, 'jwt.lastLogin');
     localStorage.removeItem('user');
     setToken('');
     setUser(null);
-  };
+  }
 
   return (
     <AuthContext.Provider
       value={{
         user,
-        signIn,
-        singOut,
-        loading,
+        signInError,
         token,
+        signIn,
+        signOut,
+        loading,
       }}>
       {children}
     </AuthContext.Provider>

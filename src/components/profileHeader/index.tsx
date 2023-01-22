@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import UserImage from '../userImage';
 import { UserDTO } from '../../utils/dtos/User';
+import api from '../../lib/axios';
 
 type UserProfileProps = {
   username: string;
@@ -16,8 +17,13 @@ type UserStatsProps = {
   tracks: number;
 };
 
-export default function ProfileHeader({ user }: { user?: UserDTO }) {
-  if (!user) return <></>;
+export default function ProfileHeader({ user }: { user: UserDTO }) {
+  const [userStats, setUserStats] = useState<UserStatsProps>({
+    hours: 0,
+    artists: 0,
+    albums: 0,
+    tracks: 0,
+  });
 
   const userProfile: UserProfileProps = {
     username: user.username,
@@ -26,12 +32,29 @@ export default function ProfileHeader({ user }: { user?: UserDTO }) {
     bio: user.bio,
   };
 
-  const userStats: UserStatsProps = {
-    hours: 350234,
-    artists: 695,
-    albums: 1112,
-    tracks: 403506,
-  };
+  async function fetchUserStats() {
+    const { data } = await api.get(`/users/${user.username}/stats`);
+    const { totalHours, totalArtists, totalAlbums, totalTracks } = data;
+
+    setUserStats({
+      hours: totalHours,
+      artists: totalArtists,
+      albums: totalAlbums,
+      tracks: totalTracks,
+    });
+  }
+
+  useEffect(() => {
+    fetchUserStats();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // const userStats: UserStatsProps = {
+  //   hours: 350234,
+  //   artists: 695,
+  //   albums: 1112,
+  //   tracks: 403506,
+  // };
 
   return (
     <div className="w-full px-4 py-6 from-white via-neutral-200 to-white bg-gradient-to-tl dark:from-neutral-800 dark:via-neutral-900 dark:to-neutral-800">
@@ -59,16 +82,23 @@ function ProfileInfo({ info }: { info: UserProfileProps }) {
 
 function ProfileMusicStatus({ info }: { info: UserStatsProps }) {
   const { hours, artists, albums, tracks } = info;
-  const intToAbbrev = (num: number, fixed = 1) => {
-    const abbrev = ['', 'K', 'M', 'B', 'T'];
-    const exp = Math.floor(Math.log(num) / Math.log(1000));
-    const result = num / Math.pow(1000, exp);
-    if (exp === 0) return `${result.toFixed(0)}${abbrev[exp]}`;
-    return `${result.toFixed(fixed)}${abbrev[exp]}`;
+  const intToAbbrev = (num: number, fixed: number = 0) => {
+    if (num >= 1e12) {
+      return (num / 1e12).toFixed(fixed) + 'T';
+    } else if (num >= 1e9) {
+      return (num / 1e9).toFixed(fixed) + 'B';
+    } else if (num >= 1e6) {
+      return (num / 1e6).toFixed(fixed) + 'M';
+    } else if (num >= 1e3) {
+      return (num / 1e3).toFixed(fixed) + 'K';
+    } else {
+      return num.toFixed(fixed).toString();
+    }
   };
+
   return (
     <section className="justify-center mx-auto mt-5 text-center md:mx-0 md:mt-0">
-      <h1 className="text-xl font-bold">{intToAbbrev(hours, 0)} hours listening</h1>
+      <h1 className="text-xl font-bold">{intToAbbrev(hours, 2)} hours listening</h1>
       <div className="flex mt-2 justify-evenly">
         <div className="flex flex-col items-center">
           <p className="-m-2 text-lg">{intToAbbrev(artists)}</p>

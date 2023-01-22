@@ -7,21 +7,25 @@ import SingUp from '../../pages/signup/index';
 
 const navbarLinks: LinkProps[] = [
   {
+    text: 'start here',
+    href: '/start-here',
+  },
+  {
     text: 'our team',
     href: '/team',
   },
-  {
-    text: 'tracks',
-    href: '/tracks',
-  },
-  {
-    text: 'albums',
-    href: '/albums',
-  },
-  {
-    text: 'artists',
-    href: '/artists',
-  },
+  // {
+  //   text: 'tracks',
+  //   href: '/tracks',
+  // },
+  // {
+  //   text: 'albums',
+  //   href: '/albums',
+  // },
+  // {
+  //   text: 'artists',
+  //   href: '/artists',
+  // },
   {
     text: 'events',
     href: '/events',
@@ -127,7 +131,7 @@ const NavLinksDesktop = () => {
 };
 
 const NavLinksMobile = ({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (bool: boolean) => void }) => {
-  const { user, singOut } = useAuth();
+  const { user, signOut } = useAuth();
   return (
     <div className="px-2 pt-2 pb-3 space-y-1">
       <Link href="/" onClick={() => setIsOpen(!isOpen)}>
@@ -163,9 +167,9 @@ const NavLinksMobile = ({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (bo
 };
 
 const SignOutButton = () => {
-  const { singOut } = useAuth();
+  const { signOut } = useAuth();
   return (
-    <button className="flex items-center mt-3 duration-200 hover:scale-110" onClick={() => singOut()}>
+    <button className="flex items-center mt-3 duration-200 hover:scale-110" onClick={() => signOut()}>
       <svg
         fill="#000000"
         height="800"
@@ -206,7 +210,7 @@ const Item = ({ name, href }: ItemProps) => {
 };
 
 const Account = () => {
-  const { user, singOut } = useAuth();
+  const { user, signOut } = useAuth();
   return (
     <div className="flex">
       <Link href={user?.username ? `/users/${user?.username}` : '/signin'}>
@@ -214,8 +218,8 @@ const Account = () => {
           <h1 className="ml-2 font-bold text-md">{user?.realName?.split(' ')[0] || user?.username || 'sign in'}</h1>
         </div>
       </Link>
-      <button className="ml-2 text-sm font-bold text-white font-nerd" onClick={() => singOut()}>
-        {user?.username ? ' singOut' : ''}
+      <button className="ml-2 text-sm font-bold text-white font-nerd" onClick={() => signOut()}>
+        {user?.username ? ' signOut' : ''}
       </button>
     </div>
   );
