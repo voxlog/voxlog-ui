@@ -1,28 +1,26 @@
 import React, { useEffect, useState, useTransition } from 'react';
 import { DateTime } from 'luxon';
 import api from '../../lib/axios';
+import { TrackOut } from './types';
 
 export default function TracksPage() {
   //  Use ajax to get the tracks from the backend
   // search while typing
 
-  const [tracks, setTracks] = useState(['Oh happy day', 'Amazing Grace', 'I will follow him']);
+  const [tracks, setTracks] = useState<TrackOut[]>([]);
   const [search, setSearch] = useState('');
   const [lastSearch, setLastSearch] = useState<DateTime>();
   const [isPending, startTransition] = useTransition();
 
   const fetchTracks = async () => {
     try {
-      const tokens = search.split(' ');
-      if (tokens.length === 0) return;
+      if (search.length === 0) return;
+      const params = new URLSearchParams([['name', search]]);
+      const url = '/tracks/search/';
+      const response = await api.get(url, { params });
+      const tracksReturned = response.data as TrackOut[];
 
-      const url = '/v1/tracks/';
-      const response = await api.get(url, {
-        params: {
-          search: tokens,
-        },
-      });
-      setTracks(response.data);
+      setTracks(tracksReturned);
     } catch (error) {
       console.log(error);
     }
@@ -46,7 +44,7 @@ export default function TracksPage() {
       <div className="absolute w-full h-full bg-black opacity-70 " />
       <div className="z-10 w-full max-w-sm mx-auto rounded-xl ">
         <div className="px-10 py-4 bg-white rounded-xl dark:bg-neutral-900">
-          <h1 className="mb-5 text-lg font-bold text-black dark:text-white">Tracks</h1>
+          <h1 className="mb-5 text-lg font-bold text-center text-black dark:text-white">Search for tracks</h1>
           <input
             type="search"
             value={search}

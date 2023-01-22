@@ -36,7 +36,7 @@ export const AuthContextProvider = ({ children }: React.PropsWithChildren<{}>) =
     const { 'jwt.token': tokenStored } = parseCookies();
     const userData = localStorage.getItem('user');
 
-    if (tokenStored) setToken(tokenStored) else singOut();
+    if (tokenStored) setToken(tokenStored);
     api.defaults.headers['Authorization'] = `Bearer ${tokenStored}`;
     if (userData) setUser(JSON.parse(userData) as UserDTO);
     setLoading(false);

@@ -1,20 +1,32 @@
-import Image from 'next/image';
 import React from 'react';
-import Avatar from 'react-avatar';
 import UserImage from '../userImage';
 import { UserDTO } from '../../utils/dtos/User';
 
-const ProfileHeader = ({ user }: { user?: UserDTO }) => {
-  if (!user) return null;
+type UserProfileProps = {
+  username: string;
+  realName?: string;
+  profilePictureUrl?: string;
+  bio?: string;
+};
 
-  const personalData = {
+type UserStatsProps = {
+  hours: number;
+  artists: number;
+  albums: number;
+  tracks: number;
+};
+
+export default function ProfileHeader({ user }: { user?: UserDTO }) {
+  if (!user) return <></>;
+
+  const userProfile: UserProfileProps = {
     username: user.username,
     realName: user.realName || undefined,
     profilePictureUrl: user.profilePictureUrl,
-    bio: user?.bio,
+    bio: user.bio,
   };
 
-  const personalMusicData = {
+  const userStats: UserStatsProps = {
     hours: 350234,
     artists: 695,
     albums: 1112,
@@ -24,21 +36,16 @@ const ProfileHeader = ({ user }: { user?: UserDTO }) => {
   return (
     <div className="w-full px-4 py-6 from-white via-neutral-200 to-white bg-gradient-to-tl dark:from-neutral-800 dark:via-neutral-900 dark:to-neutral-800">
       <section className="flex flex-wrap items-center justify-between w-full">
-        <ProfileInfo {...personalData} />
-        <ProfileMusicStatus {...personalMusicData} />
+        <ProfileInfo info={userProfile} />
+        <ProfileMusicStatus info={userStats} />
       </section>
-      <p className="mt-5 text-center">bio: {personalData.bio}</p>
+      {user.bio && <ProfileBio bio={user.bio} />}
     </div>
   );
-};
+}
 
-type ProfileInfoProps = {
-  realName: string;
-  username: string;
-  profilePictureUrl: string;
-  bio: string;
-};
-const ProfileInfo = ({ profilePictureUrl, realName, username }: ProfileInfoProps) => {
+function ProfileInfo({ info }: { info: UserProfileProps }) {
+  const { username, realName, profilePictureUrl } = info;
   return (
     <div className="flex justify-center">
       <UserImage url={profilePictureUrl} name={realName || username} sizeInPixels={128} />
@@ -48,16 +55,10 @@ const ProfileInfo = ({ profilePictureUrl, realName, username }: ProfileInfoProps
       </div>
     </div>
   );
-};
+}
 
-type ProfileMusicStatusProps = {
-  hours: number;
-  artists: number;
-  albums: number;
-  tracks: number;
-};
-
-const ProfileMusicStatus = ({ hours, artists, albums, tracks }: ProfileMusicStatusProps) => {
+function ProfileMusicStatus({ info }: { info: UserStatsProps }) {
+  const { hours, artists, albums, tracks } = info;
   const intToAbbrev = (num: number, fixed = 1) => {
     const abbrev = ['', 'K', 'M', 'B', 'T'];
     const exp = Math.floor(Math.log(num) / Math.log(1000));
@@ -84,6 +85,13 @@ const ProfileMusicStatus = ({ hours, artists, albums, tracks }: ProfileMusicStat
       </div>
     </section>
   );
-};
+}
 
-export default ProfileHeader;
+function ProfileBio({ bio }: { bio: string }) {
+  return (
+    <section className="flex flex-col justify-center w-full mt-5 text-center">
+      <h1 className="text-xl font-bold">Bio</h1>
+      <p className="mt-2">{bio}</p>
+    </section>
+  );
+}
