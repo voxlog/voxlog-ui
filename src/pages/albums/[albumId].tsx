@@ -10,7 +10,7 @@ export default function AlbumPage({ album, listeningStats, spotifyTracklist }: {
       <div className="items-center w-full mx-auto mt-8">
         <div className="text-center w-4/5 my-0 mx-auto max-w-[1100px]">
           {/* begin main screen*/}
-          {album.coverArtUrl ? <img src={album.coverArtUrl} alt={album.title} className='h-[200px] rounded-lg' style={{'display':'inline-block'}} /> : ''}
+          {album.coverArtUrl ? <img src={album.coverArtUrl} alt={album.title} className='h-[200px]' style={{'display':'inline-block'}} /> : ''}
           <div className='flex justify-center'>
             <h1 className="mt-4 text-5xl font-extrabold text-center max-w-lg">{album.title}</h1>
           </div>

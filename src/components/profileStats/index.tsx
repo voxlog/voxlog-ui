@@ -317,31 +317,33 @@ function ScrobbleInstance({ scrobble }: { scrobble: RecentScrobble }) {
   }
 
   return (
-    <div className="flex items-center w-full p-2 mt-2 transition-all duration-200 ease-in-out md:mt-1 hover:scale-105 hover:shadow-md hover:shadow-neutral-200 hover:dark:shadow-black">
+    <div className="flex items-center w-full p-2 mt-2 md:mt-1">
       <div className="flex items-center justify-between w-full">
         {scrobble.album.coverArtUrl ? (
-          <img
-            src={scrobble.album.coverArtUrl}
-            alt={scrobble.track.title}
-            className="w-10 transition-all ease-in-out rounded-sm hover:scale-150 duration-50 "
-          />
+          <Link href={`/albums/${scrobble.album.albumId}`}>
+            <img
+              src={scrobble.album.coverArtUrl}
+              alt={scrobble.track.title}
+              className="w-[60px]"
+            />
+          </Link>
         ) : (
           <Avatar
             name={scrobble.track.title}
             size="40"
-            className="w-10 transition-all ease-in-out rounded-sm hover:scale-150 duration-50 "
+            className="w-10"
           />
         )}
         <div className="flex flex-col text-center ">
           <Link href={`/tracks/${scrobble.track.trackId}`}>
-            <span className="font-semibold text-md">{scrobble.track.title}</span>
+            <span className="font-semibold text-md hover-link">{scrobble.track.title}</span>
           </Link>
           <Link href={`/artists/${scrobble.artist.artistId}`}>
-            <span className="text-sm font-thin">{scrobble.artist.name}</span>
+            <span className="text-sm font-thin hover-link">{scrobble.artist.name}</span>
           </Link>
         </div>
-        <span className="hidden text-xs font-semibold md:block">{formatDate(scrobble.scrobble.createdAt)}</span>
-        <span className="block text-xs font-semibold md:hidden"></span>
+        <span className="hidden text-sm font-semibold md:block">{formatDate(scrobble.scrobble.createdAt)}</span>
+        <span className="block text-sm font-semibold md:hidden"></span>
       </div>
     </div>
   );
