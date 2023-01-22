@@ -18,7 +18,6 @@ export async function getSpotifyArtistTopTracks(artistId: string): Promise<Spoti
       
       const statusCode = (error as any).statusCode;
       if (statusCode === 401) {
-        console.log('pegando token')
         await getAccessToken();
         return getSpotifyArtistTopTracks(artistId);
       }

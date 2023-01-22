@@ -98,7 +98,7 @@ function ProfileMusicStatus({ info }: { info: UserStatsProps }) {
 
   return (
     <section className="justify-center mx-auto mt-5 text-center md:mx-0 md:mt-0">
-      <h1 className="text-xl font-bold">{intToAbbrev(hours, 2)} hours listening</h1>
+      <h1 className="text-xl font-bold">{intToAbbrev(hours, 2)} hours listened</h1>
       <div className="flex mt-2 justify-evenly">
         <div className="flex flex-col items-center">
           <p className="-m-2 text-lg">{intToAbbrev(artists)}</p>
