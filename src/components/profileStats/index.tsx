@@ -84,7 +84,7 @@ function TopAlbums({ username, range }: { username: string; range: string }) {
     }
   }
   useEffect(() => {
-    console.log('range', filterRange);
+    // console.log('range', filterRange);
     getTopAlbums();
     // setAlbums([
     //   {
@@ -146,9 +146,9 @@ function ArtistList({
   return (
     <section className="flex flex-col justify-between w-full my-1">
       <div className="flex items-center justify-between">
-        <button className="text-lg text-neutral-500 hover:text-black" onClick={() => setDropdownOpen(!dropdownOpen)}>
+        {/* <button className="text-lg text-neutral-500 hover:text-black" onClick={() => setDropdownOpen(!dropdownOpen)}>
           {rangeOptionsMap[selectedRange]} ⭣
-        </button>
+        </button> */}
         <h1 className="mr-2 text-3xl font-bold text-center md:text-left">{title}</h1>
         {dropdownOpen && (
           // under the button
@@ -214,9 +214,9 @@ function AlbumsList({
   return (
     <section className="flex flex-col justify-between w-full my-1">
       <div className="flex items-center justify-between">
-        <button className="text-lg text-neutral-500 hover:text-black" onClick={() => setDropdownOpen(!dropdownOpen)}>
+        {/* <button className="text-lg text-neutral-500 hover:text-black" onClick={() => setDropdownOpen(!dropdownOpen)}>
           {rangeOptionsMap[selectedRange]} ⭣
-        </button>
+        </button> */}
         <h1 className="mr-2 text-3xl font-bold text-center md:text-left">{title}</h1>
         {dropdownOpen && (
           <div className="absolute flex flex-col items-center justify-center w-32 mt-2 bg-white border rounded-md shadow-md -10 i border-neutral-200">
@@ -321,18 +321,10 @@ function ScrobbleInstance({ scrobble }: { scrobble: RecentScrobble }) {
       <div className="flex items-center justify-between w-full">
         {scrobble.album.coverArtUrl ? (
           <Link href={`/albums/${scrobble.album.albumId}`}>
-            <img
-              src={scrobble.album.coverArtUrl}
-              alt={scrobble.track.title}
-              className="w-[60px]"
-            />
+            <img src={scrobble.album.coverArtUrl} alt={scrobble.track.title} className="w-[60px]" />
           </Link>
         ) : (
-          <Avatar
-            name={scrobble.track.title}
-            size="40"
-            className="w-10"
-          />
+          <Avatar name={scrobble.track.title} size="40" className="w-10" />
         )}
         <div className="flex flex-col text-center ">
           <Link href={`/tracks/${scrobble.track.trackId}`}>
