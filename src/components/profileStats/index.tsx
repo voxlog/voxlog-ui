@@ -145,14 +145,14 @@ function ArtistList({
   const [artists, setArtists] = useState<TopArtists[]>(items);
   return (
     <section className="flex flex-col justify-between w-full my-1">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center">
         {/* <button className="text-lg text-neutral-500 hover:text-black" onClick={() => setDropdownOpen(!dropdownOpen)}>
           {rangeOptionsMap[selectedRange]} ⭣
         </button> */}
         <h1 className="mr-2 text-3xl font-bold text-center md:text-left">{title}</h1>
         {dropdownOpen && (
           // under the button
-          <div className="absolute flex flex-col items-center justify-center w-32 mt-2 bg-white border rounded-md shadow-md -10 i border-neutral-200">
+          <div className="absolute flex flex-col items-center justify-center w-32 mt-2 bg-white border rounded-md shadow-md  border-neutral-200">
             {rangeOptions.map((range) => (
               <button
                 key={range}
@@ -213,7 +213,7 @@ function AlbumsList({
   const [albums, setAlbums] = useState<TopAlbums[]>(items);
   return (
     <section className="flex flex-col justify-between w-full my-1">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center">
         {/* <button className="text-lg text-neutral-500 hover:text-black" onClick={() => setDropdownOpen(!dropdownOpen)}>
           {rangeOptionsMap[selectedRange]} ⭣
         </button> */}
@@ -287,7 +287,7 @@ function RecentTracks({ username }: { username: string }) {
 
   return (
     <section className="flex flex-col justify-between w-full">
-      <h1 className="mr-2 text-3xl font-bold text-right">Recent Tracks</h1>
+      <h1 className="mr-2 text-3xl font-bold md:text-left">Recent Tracks</h1>
       <div className="mx-1">
         {scrobbles.map((scrobble) => {
           counter++;

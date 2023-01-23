@@ -6,14 +6,14 @@ import Image from 'next/image';
 import SingUp from '../../pages/signup/index';
 
 const navbarLinks: LinkProps[] = [
-  {
-    text: 'start here',
-    href: '/start-here',
-  },
-  {
-    text: 'our team',
-    href: '/team',
-  },
+  // {
+  //   text: 'start here',
+  //   href: '/start-here',
+  // },
+  // {
+  //   text: 'our team',
+  //   href: '/team',
+  // },
   // {
   //   text: 'tracks',
   //   href: '/tracks',
