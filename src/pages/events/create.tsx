@@ -61,6 +61,10 @@ export default function CreateEvent() {
     }
   }
 
+  useEffect(() => {
+    console.log(formData);
+  }, [formData]);
+
   const [center, setCenter] = useState<Marker>({
     lat: 0,
     lng: 0,
