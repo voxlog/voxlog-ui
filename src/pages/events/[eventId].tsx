@@ -6,6 +6,7 @@ import { useAuth } from '../../hooks/auth';
 import { DateTime } from 'luxon';
 import { useState } from 'react';
 import Map from '../../components/map';
+import Router from 'next/router';
 
 export default function Event({ event }: { event: EventFullOut }) {
   const { user } = useAuth();
@@ -125,7 +126,7 @@ export default function Event({ event }: { event: EventFullOut }) {
                     <span className="text-lg font-semibold text-neutral-900">
                       {event.artists.map((artist) => (
                         <Link href={`/artists/${artist.artistId}`} key={artist.artistId}>
-                          <span className="text-lg font-semibold text-neutral-900">{artist.name}</span>
+                          <span className="text-lg font-semibold text-neutral-900"> {artist.name}</span>
                         </Link>
                       ))}
                     </span>

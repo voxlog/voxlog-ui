@@ -40,12 +40,18 @@ export default function Events({ events }: { events: EventsProps[] }) {
                       {event.artists.length > 0 && ' - '}
                       {DateTime.fromISO(event.startDate).toFormat('dd/MM/yyyy')}
                     </p>
-                    <p className="text-sm text-gray-500">{event.local}</p>
+                    {event.local && <p className="text-sm text-gray-500">{event.local}</p>}
                     <p className="text-sm text-gray-500">{event.peopleCount} people</p>
                   </div>
                   {event.imageUrl && (
                     <div className="">
-                      <img src={event.imageUrl} alt={event.name} width={100} height={100} className="rounded-full" />
+                      <img
+                        src={event.imageUrl}
+                        alt={event.name}
+                        width={100}
+                        height={100}
+                        className="rounded-full w-32 h-32 object-cover"
+                      />
                     </div>
                   )}
                 </div>
@@ -76,7 +82,7 @@ export async function getServerSideProps(context: NextPageContext) {
     if (display_name) event.local = display_name;
     return event;
   }
-
+  console.log('events', events);
   events = await Promise.all(events.map(getLocal));
   events = events.filter((event) => event.local);
 

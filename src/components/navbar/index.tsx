@@ -27,6 +27,10 @@ const navbarLinks: LinkProps[] = [
   //   href: '/artists',
   // },
   {
+    text: 'get api key',
+    href: '/auth/token',
+  },
+  {
     text: 'events',
     href: '/events',
   },

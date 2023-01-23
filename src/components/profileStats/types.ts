@@ -20,6 +20,7 @@ export type TopArtists = {
   artistId: string;
   artistName: string;
   artistArtUrl: string;
+  // totalDuration: number;
 };
 
 export type TopAlbums = {

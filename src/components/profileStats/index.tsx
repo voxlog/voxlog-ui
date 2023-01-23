@@ -8,10 +8,12 @@ import Avatar from 'react-avatar';
 import Image from 'next/image';
 import { RecentScrobble, TopAlbums, TopArtists } from './types';
 import { UserDTO } from '../../utils/dtos/User';
+import { useAuth } from '../../hooks/auth';
 
 export default function ProfileStats(userDTO: { user: UserDTO }) {
   const { user: user } = userDTO;
   const { username } = user;
+  const { userId } = user;
 
   return (
     <div className="flex flex-wrap items-center justify-center w-full">
@@ -23,6 +25,7 @@ export default function ProfileStats(userDTO: { user: UserDTO }) {
 }
 
 function TopArtists({ username, range }: { username: string; range: string }) {
+  // const { user } = useAuth();
   const [artists, setArtists] = useState<TopArtists[]>([]);
   const [filterRange, setFilterRange] = useState<string>(range);
   async function getTopArtists() {
@@ -32,14 +35,15 @@ function TopArtists({ username, range }: { username: string; range: string }) {
           range: filterRange,
         },
       });
-      const { topArtists } = data;
-      setArtists(topArtists);
+
+      setArtists(data);
     } catch (error) {
       console.log(error);
     }
   }
   useEffect(() => {
     getTopArtists();
+
     // setArtists([
     //   {
     //     artistId: '1',
@@ -62,7 +66,8 @@ function TopArtists({ username, range }: { username: string; range: string }) {
     //     artistArtUrl: 'https://i.scdn.co/image/ab6761610000e5eb6f2aa6bffd27b505bc2e5b8c',
     //   },
     // ]);
-  }, [filterRange]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return <ArtistList title="Top Artists" items={artists} filterRange={filterRange} setFilterRange={setFilterRange} />;
 }
@@ -77,8 +82,7 @@ function TopAlbums({ username, range }: { username: string; range: string }) {
           range: filterRange,
         },
       });
-      const { topAlbums } = data;
-      setAlbums(topAlbums);
+      setAlbums(data);
     } catch (error) {
       console.log(error);
     }
@@ -109,7 +113,7 @@ function TopAlbums({ username, range }: { username: string; range: string }) {
     //   },
     // ]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filterRange]);
+  }, []);
 
   return <AlbumsList title="Top Albums" items={albums} filterRange={filterRange} setFilterRange={setFilterRange} />;
 }
@@ -142,7 +146,7 @@ function ArtistList({
 
   const [selectedRange, setSelectedRange] = useState<string>(filterRange);
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
-  const [artists, setArtists] = useState<TopArtists[]>(items);
+
   return (
     <section className="flex flex-col justify-between w-full my-1">
       <div className="flex items-center">
@@ -169,10 +173,10 @@ function ArtistList({
         )}
       </div>
       <div className="flex mx-auto md:mx-0">
-        {artists.length > 0 ? (
-          artists.map((artist) => {
+        {items.length > 0 ? (
+          items.map((artist) => {
             const { artistId, artistName, artistArtUrl } = artist;
-            return <Card key={title} title={artistName} image={artistArtUrl} link={`/artists/${artistId}`} />;
+            return <Card key={artistId} title={artistName} image={artistArtUrl} link={`/artists/${artistId}`} />;
           })
         ) : (
           <h1 className="text-xl font-light text-center md:text-left">No artists scrobbled yet</h1>
@@ -203,14 +207,8 @@ function AlbumsList({
     AllTime: 'All time',
   };
 
-  useEffect(() => {
-    setFilterRange(filterRange);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filterRange]);
-
   const [selectedRange, setSelectedRange] = useState<string>(filterRange);
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
-  const [albums, setAlbums] = useState<TopAlbums[]>(items);
   return (
     <section className="flex flex-col justify-between w-full my-1">
       <div className="flex items-center">
@@ -236,8 +234,8 @@ function AlbumsList({
         )}
       </div>
       <div className="flex mx-auto md:mx-0">
-        {albums.length > 0 ? (
-          albums.map((album) => {
+        {items.length > 0 ? (
+          items.map((album) => {
             const { albumId, albumTitle, albumArtUrl } = album;
             return <Card key={title} title={albumTitle} image={albumArtUrl} link={`/albums/${albumId}`} />;
           })
@@ -262,7 +260,7 @@ const Card = ({ title, image, link }: CardProps) => {
         <img
           src={image}
           alt={title}
-          className="w-32 transition-all duration-200 ease-in-out rounded-none md:rounded-sm hover:scale-125"
+          className="w-32 transition-all duration-200 ease-in-out rounded-none md:rounded-xl hover:scale-125"
         />
       </Link>
     </div>
