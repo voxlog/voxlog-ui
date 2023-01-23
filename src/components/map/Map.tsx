@@ -11,7 +11,7 @@ import shadowUrl from 'leaflet/dist/images/marker-shadow.png';
 
 const { MapContainer } = ReactLeaflet;
 // move controller to bottom left
-const Map = ({ setCenter, className, center }: any) => {
+const Map = ({ setCenter, className, center, shouldUpdate = true }: any) => {
   let mapClassName = styles.map;
 
   useEffect(() => {
@@ -29,6 +29,7 @@ const Map = ({ setCenter, className, center }: any) => {
 
     const map = ReactLeaflet.useMapEvents({
       click() {
+        if (!shouldUpdate) return;
         // @ts-ignore
         const position = map.mouseEventToLatLng(event);
         setPosition(position);

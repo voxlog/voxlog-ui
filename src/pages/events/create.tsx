@@ -289,7 +289,7 @@ export default function CreateEvent() {
               />
             </div>
 
-            <button className="px-4 py-2 mx-auto my-5 text-white bg-purple-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline">
+            <button className="px-4 py-2 mx-auto my-5 text-white bg-purple-500 rounded hover:bg-purple-700 focus:outline-none focus:shadow-outline">
               Create event
             </button>
           </div>

@@ -53,11 +53,11 @@ export default function SingUp() {
         <div className="absolute w-full h-full bg-black opacity-70 " />
         <div className="z-10 w-full max-w-sm mx-auto rounded-xl ">
           <div className="px-10 py-4 bg-white rounded-xl dark:bg-neutral-900">
-            <h1 className="mb-5 text-lg font-bold text-black dark:text-white">Erro</h1>
-            <p className="text-red-500">{error}</p>
+            <h1 className="mb-5 text-lg font-bold text-black dark:text-white">Error</h1>
+            <p className="mb-2 text-center text-red-500">{error}</p>
             <Link href="/signin">
               <span className="block mt-5 text-sm font-bold text-center text-blue-500 dark:text-blue-400 hover:underline">
-                Voltar para login
+                Go back to sign in
               </span>
             </Link>
           </div>
@@ -70,68 +70,68 @@ export default function SingUp() {
       <div className="absolute w-full h-full bg-black opacity-70 " />
       <div className="z-10 w-full max-w-sm mx-auto rounded-xl ">
         <form className="px-10 py-4 bg-white rounded-xl dark:bg-neutral-900" onSubmit={handleSubmit}>
-          <h1 className="mb-5 text-lg font-bold text-black dark:text-white">Criar conta</h1>
+          <h1 className="mb-5 text-lg font-bold text-black dark:text-white">Create account</h1>
           <Input
-            label="Nome de usuário*"
+            label="Username*"
             type="text"
             value={username}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
-            placeholder="seu nome de usuário"
+            placeholder="your username"
             maxLength={16}
             minLength={3}
             required
           />
           <Input
-            label="Endereço de e-mail*"
+            label="E-mail*"
             type="email"
             value={email}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-            placeholder="seu e-mail principal"
+            placeholder="your e-mail"
             maxLength={100}
             minLength={3}
             required
           />
           <Input
-            label="Senha*"
+            label="Password*"
             type="password"
             value={password}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
-            placeholder="uma senha segura"
+            placeholder="a safe password"
             maxLength={100}
             minLength={8}
             required
           />
           <p className="text-xs text-gray-500 dark:text-gray-400">
-            A senha deve conter apenas letras e números. No mínimo 8 caracteres, sendo pelo menos 1 letra e 1 número.'
+            The password must contain only letters and numbers. At least 8 characters, at least 1 letter and 1 number.
           </p>
 
           <Input
-            label="Confirme sua senha*"
+            label="Confirm password*"
             type="password"
             value={passwordConfirmation}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPasswordConfirmation(e.target.value)}
-            placeholder="confirme sua senha"
+            placeholder="confirm your password"
             maxLength={100}
             minLength={8}
             required
           />
 
           <Input
-            label="Data de nascimento*"
+            label="Birth date*"
             type="date"
             value={birthDate}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setBirthDate(e.target.value)}
-            placeholder="sua data de nascimento"
+            placeholder="your birth date"
             maxLength={10}
             minLength={10}
             required
           />
           <Input
-            label="Nome completo"
+            label="Real name"
             type="text"
             value={realName}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRealName(e.target.value)}
-            placeholder="seu nome completo"
+            placeholder="your real name"
             maxLength={100}
             minLength={3}
             required={false}
@@ -141,7 +141,7 @@ export default function SingUp() {
             type="text"
             value={bio}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setBio(e.target.value)}
-            placeholder="uma breve descrição sobre você"
+            placeholder="a little bit about you"
             maxLength={100}
             minLength={3}
             required={false}
@@ -157,9 +157,9 @@ export default function SingUp() {
         </form>
 
         <p className="mt-2 mb-5 text-base text-center text-white">
-          Já possui uma conta?{' '}
+          Already have an account?{' '}
           <Link className="text-purple-500 hover:text-purple-700 dark:hover:text-purple-400" href="/signin">
-            Entrar agora
+            Sign in
           </Link>
         </p>
       </div>

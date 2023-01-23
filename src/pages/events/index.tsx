@@ -2,22 +2,11 @@ import { NextPageContext } from 'next';
 import api from '../../lib/axios';
 import Link from 'next/link';
 import { DateTime } from 'luxon';
-
-type EventsProps = {
-  id: string;
-  name: string;
-  artists: string[];
-  startDate: string;
-  local: string;
-  lat: number;
-  lon: number;
-  peopleCount: number;
-  imageUrl?: string;
-};
+import { EventsProps } from './types';
 
 export default function Events({ events }: { events: EventsProps[] }) {
   events.map((event) => {
-    console.log(event)
+    console.log(event);
   });
 
   return (
@@ -26,7 +15,7 @@ export default function Events({ events }: { events: EventsProps[] }) {
         <div className="container flex items-center justify-between max-w-4xl px-4 py-2 mx-auto -mb-3">
           <h1 className="text-5xl font-bold">Events</h1>
           <Link href="/events/create">
-            <span className="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600">Create Event</span>
+            <span className="px-4 py-2 text-white bg-purple-500 rounded-lg hover:bg-purple-600">Create Event</span>
           </Link>
         </div>
       </div>
@@ -39,7 +28,7 @@ export default function Events({ events }: { events: EventsProps[] }) {
       {/* upcoming events */}
       <div className="w-full">
         <div className="container max-w-4xl p-4 mx-auto">
-          <h2 className="mb-4 text-3xl font-bold">Upcoming Events</h2>
+          <h2 className="mb-4 text-3xl font-bold">Published list</h2>
           <div className="flex flex-wrap -mx-4">
             {events.map((event) => (
               <Link href={`/events/${event.id}`} key={event.id} className="w-full px-4 my-1 md:w-1/2 lg:w-1/2">
@@ -84,13 +73,12 @@ export async function getServerSideProps(context: NextPageContext) {
     const { data } = response;
     const { display_name } = data;
     event.local = 'Unknown';
-    if(display_name)
-      event.local = display_name;
+    if (display_name) event.local = display_name;
     return event;
   }
 
   events = await Promise.all(events.map(getLocal));
-  events = events.filter((event) => event.local)
+  events = events.filter((event) => event.local);
 
   return {
     props: {
