@@ -1,17 +1,19 @@
 export type Artist = {
   artistId: string,
-  createdAt: string
-  mbId: string
-  name: string
-  picUrl: string
+  createdAt: string,
+  mbId: string,
+  name: string,
+  picUrl: string,
   spId: string
 };
 
 export type Album = {
-  albumId: string;
-  title: string;
-  coverArtUrl: string | null;
-  fromArtist: Artist;
+  albumId: string,
+  title: string,
+  artistId: string,
+  artistName: string,
+  coverArtUrl: string | null,
+  spId: string
 };
 
 export type Track = {
