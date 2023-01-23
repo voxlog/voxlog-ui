@@ -16,6 +16,10 @@ type EventsProps = {
 };
 
 export default function Events({ events }: { events: EventsProps[] }) {
+  events.map((event) => {
+    console.log(event)
+  });
+
   return (
     <>
       <div className="w-full">
@@ -78,26 +82,15 @@ export async function getServerSideProps(context: NextPageContext) {
     const { lat, lon } = event;
     const response = await api.get(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`);
     const { data } = response;
-    const { address, display_name, name } = data;
-    if (address) {
-      event.local = address.man_made;
-    } else if (display_name) {
+    const { display_name } = data;
+    event.local = 'Unknown';
+    if(display_name)
       event.local = display_name;
-    } else if (name) {
-      event.local = name;
-    }
-
     return event;
   }
 
   events = await Promise.all(events.map(getLocal));
-  events = events.filter((event) => event.local);
-
-  events = events.filter((event) => {
-    const startDate = DateTime.fromISO(event.startDate);
-    const now = DateTime.now();
-    return startDate > now;
-  });
+  events = events.filter((event) => event.local)
 
   return {
     props: {

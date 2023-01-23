@@ -70,7 +70,21 @@ export async function getSpotifyAlbumTracks(albumId: string): Promise<SpotifyApi
     }
 }
 
+export async function getSpotifyTrack(trackId: string): Promise<SpotifyApi.TrackObjectFull> {
+    try {
+      const data = await spotifyApi.getTrack(trackId);
+      return data.body;
+    } catch (error: unknown) {
+      const statusCode = (error as any).statusCode;
+      if (statusCode === 401) {
+        await getAccessToken();
+        return getSpotifyTrack(trackId);
+      }
+      throw error;
+    }
+}
+
 export default { 
   getSpotifyArtistTopTracks, getSpotifyArtistRecentAlbums, 
-  getSpotifyAlbumTracks, getSpotifyArtist 
+  getSpotifyAlbumTracks, getSpotifyArtist, getSpotifyTrack
 };
