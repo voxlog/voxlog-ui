@@ -4,10 +4,11 @@ import { NextPageContext } from 'next';
 import { Track } from '../../utils/dtos/Resources';
 import Image from 'next/image';
 import { getSpotifyTrack } from '../../lib/spotifyApi';
+import { getTrackLyrics } from '../../lib/musixmatchApi';
 
-export default function TrackPage({ track, listeningStats, spotifyTrack }: { track: Track, listeningStats: any, spotifyTrack: SpotifyApi.TrackObjectFull | null }) {
+export default function TrackPage({ track, listeningStats, spotifyTrack, trackLyrics }: { track: Track, listeningStats: any, spotifyTrack: SpotifyApi.TrackObjectFull | null, trackLyrics: string | null }) {
   return (
-    <div className="w-full h-screen">
+    <div className="w-full">
       <div className="items-center w-full mx-auto mt-8">
         <div className="text-center w-4/5 my-0 mx-auto max-w-[900px]">
           {/* begin main screen*/}
@@ -67,10 +68,35 @@ export default function TrackPage({ track, listeningStats, spotifyTrack }: { tra
           
           <div className="flex flex-row justify-between mt-10 text-left">
             <div className="flex flex-col items-center">
-              <h1 className="text-2xl font-bold">Sample</h1>
+              <h1 className="text-2xl font-bold mb-2">Sample</h1>
+              <iframe style={{"borderRadius":"12px"}} 
+              src={`https://open.spotify.com/embed/track/${track.spId}?utm_source=generator`}
+              width="100%" height="352" 
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+              loading="lazy"></iframe>
             </div>
             <div className="flex flex-col items-center">
-              <h1 className="text-2xl font-bold">Lyrics</h1>
+              <h1 className="text-2xl font-bold mb-2">Lyrics</h1>
+              {
+                trackLyrics ? (
+                  <div className="max-w-[400px]">
+                    {
+                      trackLyrics.split('\n').map((line, index) => {
+                        return (
+                          <p key={index} className="text-lg">{line}</p>
+                        )
+                      })
+                    }
+                    <p className='text-justify text-gray-300 text-sm mt-5'>
+                      Lyrics powered by www.musixmatch.com. This Lyrics is NOT for Commercial use and only 30% of the lyrics are returned.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="w-full h-96 overflow-y-scroll">
+                    <p className="text-lg">No lyrics found</p>
+                  </div>
+                )
+              }
             </div>
           </div>
           {/* end main screen */}
@@ -87,8 +113,6 @@ export async function getServerSideProps(context: NextPageContext) {
 
     if (!track) throw new Error('Track not found');
 
-    console.log(track)
-
     const {data: listeningStats} = await api.get(`/tracks/${trackId}/listening-stats`);
 
     let spotifyTrack: SpotifyApi.TrackObjectFull | null = null;
@@ -96,11 +120,19 @@ export async function getServerSideProps(context: NextPageContext) {
       spotifyTrack = await getSpotifyTrack(track.spId);
     }
 
+    let trackLyrics: string | null = null;
+    if(spotifyTrack && spotifyTrack.external_ids.isrc != undefined) {
+      const res = await getTrackLyrics(spotifyTrack.external_ids.isrc);
+      if (res)
+        trackLyrics = res
+    }
+
     return {
       props: {
         track,
         listeningStats,
         spotifyTrack,
+        trackLyrics
       },
     };
   } catch (error) {
